@@ -5,21 +5,27 @@
 
 const SITE = {
   handle: "Kyoss",
-  tagline: "Custom Minecraft plugins for servers that outgrew the marketplace.",
-  intro:
-    "I build bespoke Paper plugins — the systems a server needs when the public offering " +
-    "stops fitting. Everything below runs in production on a live network, not on a test box. " +
-    "Twelve plugins, ~267 classes, one shared architecture.",
+  tagline: "Kyoss: Minecraft Server Development Services.",
+
+  // The hero list. Add or cut lines freely — the layout adapts.
+  servicesLabel: "Which includes:",
+  services: [
+    "Minecraft Plugin Development",
+    "Minecraft Server Optimization",
+    "Plugin Maintenance and Support"
+  ],
 
   // ---- EDIT THESE ----
   discord: "kyoss",
+  discordIcon: "assets/img/icons/Discord-Symbol-Blurple.svg",
   email: "Kyoush303@gmail.com",
   github: "https://github.com/Kyossss",
   // --------------------
 
   stats: [
-    { n: "12", label: "plugins in production" },
-    { n: "267", label: "classes written" },
+    { n: "11", label: "plugins in production" },
+    { n: "2", label: "live networks" },
+    { n: "249", label: "classes written" },
     { n: "26.1.2", label: "Paper, on Java 25" },
     { n: "0", label: "marketplace forks" }
   ]
@@ -208,23 +214,6 @@ const PLUGINS = [
     commands: ["/trident gravestone"]
   },
   {
-    id: "showcase",
-    name: "TridentShowcase",
-    sub: "in-world shops",
-    icon: "\u{1F6D2}",
-    category: "gameplay",
-    scale: "18 classes",
-    pitch: "Rotating item displays you place in the world, wired to a real purchase flow.",
-    detail: [
-      "One catalog entry — id, item, price, stock — can back any number of physical placements.",
-      "Each display is an invisible floating stand, tagged so it is recovered on boot rather than duplicated.",
-      "Rotation skips unloaded chunks and any display with no player nearby, so idle shops cost nothing.",
-      "Purchases charge through the shared economy, with a per-purchase quantity cap.",
-      "Degrades rather than failing when its optional dependencies are absent."
-    ],
-    commands: ["/ts", "/tridentshowcase"]
-  },
-  {
     id: "notify",
     name: "TridentNotify",
     sub: "notifications & inbox",
@@ -262,6 +251,45 @@ const PLUGINS = [
     ],
     note: "A library, not a feature. Its README doubles as the integration guide.",
     commands: ["/combat check|clear <player>"]
+  }
+];
+
+/*
+ * Servers the work actually runs on.
+ *
+ * logo:   a file in assets/img/servers/. If the file is missing the card falls
+ *         back to the server's name as text, so the page never looks broken.
+ * tags:   short factual chips — platform, mode, scale. Keep them true.
+ * review: the quote under the card. Set `pending: true` for a server that has
+ *         not given one yet, and it renders greyed out instead of as a quote.
+ */
+const SERVERS = [
+  {
+    name: "Trident Legacy",
+    logo: "assets/img/servers/trident-legacy.png",
+    role: "Plugin developer",
+    blurb:
+      "A survival network running Paper 26.1.2 in offline mode. Every plugin on this page " +
+      "was built for it and runs there in production — twelve of the nineteen modules in " +
+      "the suite, on a live server with real players. The offline-mode constraint drove a " +
+      "lot of the work: no Mojang session to trust means skins, profiles and identity all " +
+      "had to be solved from scratch.",
+    tags: ["Paper 26.1.2", "Offline mode", "11 plugins shipped"],
+    review: "My personal project server."
+  },
+  {
+    name: "TokyoCore",
+    logo: "assets/img/servers/tokyocore.png",
+    role: "Server optimisation",
+    // TODO — worth naming the specifics once you have them to hand: what was
+    // slow, what you changed, and the before/after. Numbers sell this section.
+    blurb:
+      "Performance work on a running network. Not a rebuild — finding what was actually " +
+      "costing the server its tick budget and fixing that, on a live server with players " +
+      "on it and no appetite for downtime.",
+    tags: ["Performance tuning"],
+    review: "Awaiting review",
+    pending: true
   }
 ];
 

@@ -136,15 +136,35 @@ main { position: relative; z-index: 1; }
   margin-bottom: 1.1rem;
 }
 .hero h1 {
-  font-size: clamp(2.1rem, 5.6vw, 3.7rem);
-  font-weight: 750;
-  max-width: 17ch;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  max-width: 22ch;
 }
-.lede {
-  margin-top: 1.4rem;
-  max-width: 62ch;
+.services-label {
+  margin-top: 1.6rem;
   color: var(--ink-soft);
-  font-size: clamp(1rem, 1.6vw, 1.12rem);
+  font-size: 1rem;
+}
+
+.services {
+  list-style: none;
+  margin: .9rem 0 0; padding: 0;
+  display: grid; gap: .5rem .5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, max-content));
+  max-width: 640px;
+}
+.services li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: clamp(1rem, 1.5vw, 1.08rem);
+  font-weight: 550;
+  color: var(--ink);
+}
+.services li::before {
+  content: "◆";
+  position: absolute; left: 0; top: 0;
+  font-size: .68em; line-height: 1.9;
+  color: var(--accent);
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2.1rem; }
 
@@ -260,6 +280,75 @@ main { position: relative; z-index: 1; }
 
 .empty { color: var(--ink-faint); padding: 2rem 0; }
 
+/* ---------- servers ---------- */
+
+.servers { display: grid; gap: 1rem; }
+
+.server {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.8rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* No plate — the logos sit straight on the card. A fixed box with object-fit
+   keeps a square mark and a wide wordmark looking the same weight, rather than
+   the square one towering over the other. */
+.server-logo { display: grid; place-items: center; }
+.server-logo img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  display: block;
+}
+.server-logo-fallback {
+  font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em;
+  color: var(--ink); text-align: center;
+}
+
+.server-name { font-size: 1.2rem; font-weight: 700; }
+.server-role {
+  margin-top: .2rem;
+  font-family: var(--mono); font-size: .76rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent);
+}
+.server-blurb { margin-top: .9rem; color: var(--ink-soft); font-size: .93rem; }
+
+.server-tags {
+  list-style: none; margin: 1rem 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .4rem;
+}
+.server-tags li {
+  font-family: var(--mono); font-size: .74rem;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  padding: .22rem .6rem; border-radius: 999px;
+}
+
+.server-review {
+  margin-top: 1.2rem; padding-top: 1rem;
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink);
+  font-size: .95rem; font-style: italic;
+}
+.server-review.is-pending {
+  color: var(--ink-faint);
+  font-style: normal;
+  font-family: var(--mono); font-size: .78rem;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+
+@media (max-width: 620px) {
+  .server { grid-template-columns: 1fr; gap: 1.3rem; align-items: start; }
+  .server-logo img { height: 130px; }
+}
+
 /* ---------- how ---------- */
 
 .how-grid {
@@ -305,6 +394,10 @@ main { position: relative; z-index: 1; }
   transition: border-color .16s;
 }
 .contact-list a:hover { border-color: var(--accent-dim); }
+.contact-icon {
+  height: 17px; width: auto;
+  display: block; flex: none;
+}
 .contact-list em {
   font-style: normal; font-family: var(--mono);
   font-size: .78rem; color: var(--ink-faint);

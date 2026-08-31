@@ -1,6 +1,6 @@
 # Plugin portfolio
 
-A static portfolio of the twelve Trident plugins I authored, aimed at Minecraft server
+A static portfolio of the eleven Trident plugins I authored, aimed at Minecraft server
 owners. Plain HTML, CSS and JavaScript — no build step, no dependencies, no Node.
 Open `index.html` in a browser and it works.
 
@@ -17,7 +17,7 @@ Portfolio/
 
 ## The only file you need to edit
 
-**`assets/js/data.js`.** The intro, the stat tiles, the contact details, and all twelve
+**`assets/js/data.js`.** The intro, the stat tiles, the contact details, and all eleven
 plugin entries live there as plain objects. Change a value, save, refresh.
 
 ### Contact details
@@ -29,14 +29,15 @@ A contact entry with no value is simply not rendered, so deleting one is safe.
 
 ## What is on it, and what is not
 
-Twelve plugins: **TridentSkins, TridentCameraAPI, TridentEmotes, TridentPets,
+Eleven plugins: **TridentSkins, TridentCameraAPI, TridentEmotes, TridentPets,
 TridentSocials, TridentTrade, TridentDuels, TridentUtilities, TridentGravestone,
-TridentShowcase, TridentNotify, CombatSystem.**
+TridentNotify, CombatSystem.**
 
 Deliberately excluded: **TridentCore, Lands, Ranks, Menu, Backpack, Avatars, Chests** —
-majority-authored by M0rk. The "How I work" section still refers to the shared
-architecture, because that is the context these twelve run in, but it claims none of those
-plugins as mine.
+majority-authored by M0rk, and **TridentShowcase**, which Kyo confirmed is not his despite
+git reading that way. The "How I work" section still refers to the shared architecture,
+because that is the context these eleven run in, but it claims none of those plugins as
+mine.
 
 ### On the Antigravity byline
 
@@ -86,6 +87,18 @@ Any repo name, e.g. `plugin-portfolio`. Same commands with that name, then in th
 - The repo must be **public** for Pages, unless you are on a paid GitHub plan.
 - Nothing here reads a server, a database or a credential. It is safe to publish as-is.
 - All paths are relative, so both options work with no edits.
+
+## Servers section
+
+`SERVERS` in `data.js` drives the "Servers I worked on" cards. Logos live in
+`assets/img/servers/`.
+
+**Filenames must be lowercase.** Windows ignores case, GitHub Pages does not, so a logo
+saved as `TokyoCore.png` works locally and 404s once published. A missing logo falls back
+to the server name as text rather than a broken image.
+
+Set `pending: true` on a server whose `review` has not arrived yet — it renders as muted
+uppercase text instead of as a quote.
 
 ## Adding a plugin
 

@@ -17,7 +17,10 @@
 
     var links = [];
     if (SITE.discord) {
-      links.push("<li><span>\u{1F4AC} Discord <em>" + esc(SITE.discord) + "</em></span></li>");
+      var dIcon = SITE.discordIcon
+        ? '<img class="contact-icon" src="' + esc(SITE.discordIcon) + '" alt="" aria-hidden="true">'
+        : "\u{1F4AC}";
+      links.push("<li><span>" + dIcon + " Discord <em>" + esc(SITE.discord) + "</em></span></li>");
     }
     if (SITE.email) {
       links.push('<li><a href="mailto:' + esc(SITE.email) + '">✉ ' + esc(SITE.email) + "</a></li>");
@@ -26,6 +29,13 @@
       links.push('<li><a href="' + esc(SITE.github) + '" rel="noopener">\u{1F4C1} GitHub</a></li>');
     }
     $("#contact-list").innerHTML = links.join("");
+
+    var svc = $("#services");
+    if (svc && SITE.services) {
+      svc.innerHTML = SITE.services.map(function (t) {
+        return "<li>" + esc(t) + "</li>";
+      }).join("");
+    }
   }
 
   function esc(s) {
@@ -68,6 +78,50 @@
       return '<button class="filter" type="button" role="tab" data-cat="' + c.id + '"' +
         ' aria-selected="' + (c.id === active) + '">' + esc(c.label) + "</button>";
     }).join("");
+  }
+
+  /* ---------- servers ---------- */
+
+  function renderServers() {
+    var host = $("#servers-list");
+    if (!host || typeof SERVERS === "undefined") { return; }
+
+    host.innerHTML = SERVERS.map(function (s) {
+      var tags = (s.tags || []).map(function (t) {
+        return '<li>' + esc(t) + "</li>";
+      }).join("");
+
+      var review = "";
+      if (s.review) {
+        review = '<p class="server-review' + (s.pending ? " is-pending" : "") + '">' +
+          (s.pending ? "" : "“") + esc(s.review) + (s.pending ? "" : "”") +
+          "</p>";
+      }
+
+      return '<article class="server">' +
+        '<div class="server-logo">' +
+          '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy">' +
+          '<span class="server-logo-fallback" hidden>' + esc(s.name) + "</span>" +
+        "</div>" +
+        '<div class="server-body">' +
+          '<h3 class="server-name">' + esc(s.name) + "</h3>" +
+          '<p class="server-role">' + esc(s.role) + "</p>" +
+          (s.blurb ? '<p class="server-blurb">' + esc(s.blurb) + "</p>" : "") +
+          (tags ? '<ul class="server-tags">' + tags + "</ul>" : "") +
+          review +
+        "</div>" +
+      "</article>";
+    }).join("");
+
+    /* a logo file that is not there yet falls back to the name, so the card
+       still reads properly instead of showing a broken-image icon */
+    host.querySelectorAll(".server-logo img").forEach(function (img) {
+      img.addEventListener("error", function () {
+        img.hidden = true;
+        var fb = img.parentNode.querySelector(".server-logo-fallback");
+        if (fb) { fb.hidden = false; }
+      });
+    });
   }
 
   /* ---------- modal ---------- */
@@ -135,4 +189,5 @@
   fillSite();
   buildFilters();
   render();
+  renderServers();
 })();

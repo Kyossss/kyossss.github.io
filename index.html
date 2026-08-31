@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kyoss — Custom Minecraft Plugins</title>
-<meta name="description" content="Bespoke Paper plugins for Minecraft servers. Eleven plugins running in production: skins, emotes, pets, parties, duels, gravestones and more.">
-<meta property="og:title" content="Kyoss — Custom Minecraft Plugins">
-<meta property="og:description" content="Bespoke Paper plugins for Minecraft servers. Eleven plugins running in production.">
+<title>Kyoss — Minecraft Server Development Services</title>
+<meta name="description" content="Bespoke Paper plugin development and server performance optimisation for Minecraft networks. Eleven plugins running in production: skins, emotes, pets, parties, trading, duels, gravestones and more.">
+<meta property="og:title" content="Kyoss — Minecraft Server Development Services">
+<meta property="og:description" content="Bespoke Paper plugin development and server performance optimisation. Eleven plugins running in production.">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -22,6 +22,7 @@
   </a>
   <nav>
     <a href="#work">Plugins</a>
+    <a href="#servers">Servers</a>
     <a href="#how">How I work</a>
     <a href="#contact" class="nav-cta">Hire me</a>
   </nav>
@@ -30,9 +31,10 @@
 <main id="top">
 
   <section class="hero">
-    <p class="eyebrow">Paper 26.1.2 · Java 25 · production</p>
-    <h1 data-site="tagline">Custom Minecraft plugins for servers that outgrew the marketplace.</h1>
-    <p class="lede" data-site="intro"></p>
+    <p class="eyebrow">Paper 26.1.2 · Java 25 · Production</p>
+    <h1 data-site="tagline">Kyoss: Minecraft Server Development Services.</h1>
+    <p class="services-label" data-site="servicesLabel"></p>
+    <ul class="services" id="services"></ul>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#work">See the plugins</a>
       <a class="btn" href="#contact">Start a project</a>
@@ -52,6 +54,14 @@
     <p class="empty" id="empty" hidden>Nothing in that category.</p>
   </section>
 
+  <section id="servers" class="section">
+    <div class="section-head">
+      <h2>Servers I worked on</h2>
+      <p>Live networks — plugins built, servers tuned.</p>
+    </div>
+    <div class="servers" id="servers-list"></div>
+  </section>
+
   <section id="how" class="section section-alt">
     <div class="section-head">
       <h2>How I work</h2>
@@ -64,7 +74,15 @@
           These eleven are part of a nineteen-plugin system. Nothing reaches into another
           plugin's classes — everything goes through one shared core that owns the database
           pool, the economy abstraction, the command router and the service registry. Adding
-          the twelfth plugin costs the same as adding the second.
+          the twentieth plugin costs the same as adding the second.
+        </p>
+      </article>
+      <article>
+        <h3>Measured, not guessed</h3>
+        <p>
+          Performance work starts with a profile, not a list of settings copied off a forum
+          post. I find what is actually costing your server its tick budget, change that, and
+          measure again — on a running server, without the downtime a rebuild would cost you.
         </p>
       </article>
       <article>
@@ -99,9 +117,10 @@
     <div class="contact-card">
       <h2>Need something built?</h2>
       <p>
-        Custom work, or any of the above adapted to your server. Tell me what your server does
-        that the marketplace plugins cannot, and I will tell you honestly whether it is worth
-        building.
+        Custom plugin work, any of the above adapted to your server, or a look at why your
+        existing setup is running badly. Tell me what your server does that the marketplace
+        plugins cannot — or where it is losing ticks — and I will tell you honestly whether it
+        is worth doing.
       </p>
       <ul class="contact-list" id="contact-list"></ul>
     </div>
