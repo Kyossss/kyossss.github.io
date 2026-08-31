@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyoss — Custom Minecraft Plugins</title>
+<meta name="description" content="Bespoke Paper plugins for Minecraft servers. Eleven plugins running in production: skins, emotes, pets, parties, duels, gravestones and more.">
+<meta property="og:title" content="Kyoss — Custom Minecraft Plugins">
+<meta property="og:description" content="Bespoke Paper plugins for Minecraft servers. Eleven plugins running in production.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to the plugins</a>
+
+<header class="nav">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <span class="brand-name" data-site="handle">Kyoss</span>
+  </a>
+  <nav>
+    <a href="#work">Plugins</a>
+    <a href="#how">How I work</a>
+    <a href="#contact" class="nav-cta">Hire me</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <p class="eyebrow">Paper 26.1.2 · Java 25 · production</p>
+    <h1 data-site="tagline">Custom Minecraft plugins for servers that outgrew the marketplace.</h1>
+    <p class="lede" data-site="intro"></p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#work">See the plugins</a>
+      <a class="btn" href="#contact">Start a project</a>
+    </div>
+    <ul class="stats" id="stats"></ul>
+  </section>
+
+  <section id="work" class="section">
+    <div class="section-head">
+      <h2>The work</h2>
+      <p>Eleven plugins, all running on a live network. Click any card for the detail.</p>
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="Filter plugins by category"></div>
+
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>Nothing in that category.</p>
+  </section>
+
+  <section id="how" class="section section-alt">
+    <div class="section-head">
+      <h2>How I work</h2>
+      <p>The part that matters after launch day.</p>
+    </div>
+    <div class="how-grid">
+      <article>
+        <h3>Built as a suite, not a pile</h3>
+        <p>
+          These eleven are part of a nineteen-plugin system. Nothing reaches into another
+          plugin's classes — everything goes through one shared core that owns the database
+          pool, the economy abstraction, the command router and the service registry. Adding
+          the twelfth plugin costs the same as adding the second.
+        </p>
+      </article>
+      <article>
+        <h3>Optional dependencies stay optional</h3>
+        <p>
+          Every external hook degrades instead of failing. No Model Engine? Emotes fall back
+          rather than erroring on every use. No BetterHud? Notifications drop to the next
+          renderer. Your server does not go down because a dependency did.
+        </p>
+      </article>
+      <article>
+        <h3>Versioned and shipped deliberately</h3>
+        <p>
+          Every fix bumps that plugin's version, in the same commit, with a note saying what
+          the number contains. CI builds the jars; a deploy is verified against the server
+          afterwards, not assumed. You can always tell which build you are running.
+        </p>
+      </article>
+      <article>
+        <h3>Documented for the next developer</h3>
+        <p>
+          Every plugin ships a README covering commands, permissions, config keys and the API,
+          including the warnings — where a setting is destructive, where a name is inconsistent.
+          Two of them were rewritten from scratch because the old ones described features that
+          did not exist. You are not buying a black box.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="contact-card">
+      <h2>Need something built?</h2>
+      <p>
+        Custom work, or any of the above adapted to your server. Tell me what your server does
+        that the marketplace plugins cannot, and I will tell you honestly whether it is worth
+        building.
+      </p>
+      <ul class="contact-list" id="contact-list"></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>Built with Paper, Maven and no framework. This page has no build step and no dependencies.</p>
+</footer>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-scrim" data-close></div>
+  <article class="modal-panel" role="document">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div id="modal-body"></div>
+  </article>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
