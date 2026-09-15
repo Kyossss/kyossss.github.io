@@ -32,6 +32,39 @@ const SITE = {
 };
 
 /*
+ * review.html — the client review form.
+ *
+ * Send a finished client this link, with their server name on the end:
+ *   https://<your-pages-url>/review.html?server=Tokyo%20Core%20SMP
+ * The page greets them by server, and the name is pre-filled for them.
+ *
+ * webhook: a Discord webhook URL. Server Settings → Integrations →
+ * Webhooks → New Webhook, pointed at a private channel only you can read.
+ * Every submitted review is POSTed there as an embed; that channel is the
+ * only place a review is ever stored. Leave it empty and the page still
+ * works — it hands the client their review as text to send you instead.
+ *
+ * The URL is visible in this file to anyone who views the page source.
+ * That is the trade for having no backend: someone who finds it can post
+ * junk into that one channel. If that happens, delete the webhook in
+ * Discord and paste the new URL here — the old one dies instantly.
+ * Never point it at a channel that matters.
+ */
+const REVIEW = {
+  webhook: "https://discord.com/api/webhooks/1549388566201897062/dY4v-EnIpAfsBmScSk5_O1ihfDPCXqD_tHccypwc_5w0oLKgBkTfwXQgb-scksYTkqu2",
+
+  // The four things a client scores. Rename freely; the page adapts.
+  criteria: [
+    { id: "communication", name: "Communication", sub: "Kept you in the loop, answered clearly." },
+    { id: "speed",         name: "Speed",         sub: "Delivered in the time it should have taken." },
+    { id: "results",       name: "Results",       sub: "The work actually solved the problem." },
+    { id: "value",         name: "Value",         sub: "Worth what you paid for it." }
+  ],
+
+  metricPlaceholder: "What was measured"
+};
+
+/*
  * category: cosmetics | social | gameplay | infra
  * scale:    a one-line credibility signal
  * pitch:    what a server OWNER gets. No internals.
