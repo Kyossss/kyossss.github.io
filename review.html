@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leave a review — Kyoss</title>
+<meta name="description" content="Tell me how the work went. Two minutes, four ratings, nothing published without your say-so.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/review.css">
+</head>
+<body>
+
+<a class="skip" href="#form">Skip to the form</a>
+
+<header class="nav">
+  <a class="brand" href="index.html">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <span class="brand-name" data-site="handle">Kyoss</span>
+  </a>
+  <nav>
+    <a href="index.html">The work</a>
+    <a href="index.html#contact" class="nav-cta">Get in touch</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="rv-hero">
+    <p class="eyebrow" id="rv-eyebrow">Client review</p>
+    <h1 id="rv-title">How did I do?</h1>
+    <p class="rv-lede">
+      You hired me, I did the work, and you are the only person who can say whether it was
+      worth it. Four ratings and a couple of sentences — about two minutes. Be honest rather
+      than kind: a review I have to live up to is worth more to me than a flattering one.
+    </p>
+    <p class="rv-lede rv-lede-quiet">
+      <strong>Nothing here is published unless you tick the box at the bottom.</strong>
+      Leave it unticked and this is private feedback to me and no one else.
+    </p>
+  </section>
+
+  <div class="rv-progress" aria-hidden="true"><span id="rv-bar"></span></div>
+
+  <div class="rv-wrap" id="form">
+
+    <form class="rv-form" id="rv-form" novalidate>
+
+      <!-- 1. who -->
+      <fieldset class="rv-block">
+        <legend><span class="rv-step">1</span> Who is this from?</legend>
+
+        <div class="rv-row">
+          <label class="rv-field">
+            <span class="rv-label">Your name <em>required</em></span>
+            <input type="text" id="f-name" name="name" autocomplete="name" maxlength="80"
+                   placeholder="Your name" required>
+          </label>
+          <label class="rv-field">
+            <span class="rv-label">Your server <em>required</em></span>
+            <input type="text" id="f-server" name="server" maxlength="80"
+                   placeholder="Your server name" required>
+          </label>
+        </div>
+
+        <label class="rv-field">
+          <span class="rv-label">Discord handle <em>optional</em></span>
+          <input type="text" id="f-discord" name="discord" maxlength="60" placeholder="yourhandle">
+          <span class="rv-hint">So I can thank you, and reach you if anything needs a follow-up.</span>
+        </label>
+      </fieldset>
+
+      <!-- 2. what -->
+      <fieldset class="rv-block">
+        <legend><span class="rv-step">2</span> What did I do for you?</legend>
+        <div class="rv-chips" id="f-services" role="group" aria-label="Type of work">
+          <label class="rv-chip"><input type="checkbox" name="service" value="Server optimisation"><span>Server optimisation</span></label>
+          <label class="rv-chip"><input type="checkbox" name="service" value="Plugin development"><span>Plugin development</span></label>
+          <label class="rv-chip"><input type="checkbox" name="service" value="Maintenance and support"><span>Maintenance and support</span></label>
+          <label class="rv-chip"><input type="checkbox" name="service" value="Something else"><span>Something else</span></label>
+        </div>
+      </fieldset>
+
+      <!-- 3. ratings -->
+      <fieldset class="rv-block">
+        <legend><span class="rv-step">3</span> Score the work</legend>
+        <p class="rv-block-note">Five stars means you would struggle to name an improvement. Three is solid work.</p>
+        <div id="f-ratings" class="rv-ratings"></div>
+
+        <div class="rv-again">
+          <span class="rv-label">Would you hire me again?</span>
+          <div class="rv-seg" role="radiogroup" aria-label="Would you hire me again">
+            <label><input type="radio" name="again" value="Yes"><span>Yes</span></label>
+            <label><input type="radio" name="again" value="Maybe"><span>Maybe</span></label>
+            <label><input type="radio" name="again" value="No"><span>No</span></label>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- 4. words -->
+      <fieldset class="rv-block">
+        <legend><span class="rv-step">4</span> In your own words</legend>
+
+        <label class="rv-field">
+          <span class="rv-label">What was wrong before? <em>required</em></span>
+          <textarea id="f-before" name="before" rows="3" maxlength="600"
+                    placeholder="Lag spikes after every restart, console full of errors, no idea what was causing it…" required></textarea>
+          <span class="rv-count" data-count-for="f-before"></span>
+        </label>
+
+        <label class="rv-field">
+          <span class="rv-label">What changed? <em>required</em></span>
+          <textarea id="f-after" name="after" rows="3" maxlength="600"
+                    placeholder="What the server feels like now, and what your players noticed…" required></textarea>
+          <span class="rv-count" data-count-for="f-after"></span>
+        </label>
+
+        <label class="rv-field">
+          <span class="rv-label">What should I do better next time? <em>private, never published</em></span>
+          <textarea id="f-improve" name="improve" rows="2" maxlength="600"
+                    placeholder="The part that annoyed you. This one only I ever see."></textarea>
+          <span class="rv-hint">Excluded from publication even if you tick the box below.</span>
+        </label>
+      </fieldset>
+
+      <!-- 5. numbers -->
+      <fieldset class="rv-block">
+        <legend><span class="rv-step">5</span> Numbers <em class="rv-opt">optional</em></legend>
+        <p class="rv-block-note">
+          Only if you have them to hand and are happy to share them. One real
+          before-and-after is worth more than a paragraph of praise.
+        </p>
+        <div id="f-metrics" class="rv-metrics"></div>
+        <button type="button" class="btn rv-add" id="rv-add-metric">+ Add another</button>
+      </fieldset>
+
+      <!-- 6. permission -->
+      <fieldset class="rv-block rv-block-permission">
+        <legend><span class="rv-step">6</span> Permission</legend>
+
+        <label class="rv-check">
+          <input type="checkbox" id="f-publish" name="publish">
+          <span>
+            <b>You may publish this review on your site.</b>
+            My name, my server's name and what I wrote above may appear publicly. The preview
+            on this page is exactly what would be shown.
+          </span>
+        </label>
+
+        <label class="rv-check" id="f-publish-numbers-wrap" hidden>
+          <input type="checkbox" id="f-publish-numbers" name="publishNumbers">
+          <span>
+            The numbers I entered may be published too.
+            <em>Leave this unticked and the numbers stay between us.</em>
+          </span>
+        </label>
+
+        <p class="rv-legal">
+          If we have a confidentiality agreement in place, ticking a box here is your written
+          consent to release only what the preview shows. Everything else stays confidential,
+          and you can ask me to take a published review down at any time.
+        </p>
+      </fieldset>
+
+      <div class="rv-submit">
+        <button type="submit" class="btn btn-primary" id="rv-send">Send review</button>
+        <p class="rv-status" id="rv-status" role="status"></p>
+      </div>
+
+    </form>
+
+    <!-- live preview -->
+    <aside class="rv-preview" aria-label="Preview of your review">
+      <div class="rv-preview-inner">
+        <p class="rv-preview-head">
+          <span class="rv-dot" aria-hidden="true"></span>
+          Live preview — how this would appear on the site
+        </p>
+
+        <article class="rv-card" id="rv-card">
+          <div class="rv-card-stars" id="pv-stars" aria-hidden="true"></div>
+          <blockquote class="rv-card-quote" id="pv-quote">Your words appear here as you type.</blockquote>
+          <ul class="rv-card-metrics" id="pv-metrics"></ul>
+          <footer class="rv-card-by">
+            <b id="pv-name">Your name</b>
+            <span id="pv-server">Your server</span>
+          </footer>
+        </article>
+
+        <p class="rv-preview-foot" id="pv-foot">
+          Not published — the permission box is unticked.
+        </p>
+      </div>
+    </aside>
+
+  </div>
+
+  <section class="rv-done" id="rv-done" hidden>
+    <div class="rv-done-mark" aria-hidden="true">◆</div>
+    <h2 id="rv-done-title">Thank you.</h2>
+    <p id="rv-done-body"></p>
+    <a class="btn" href="index.html">Back to the portfolio</a>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>No trackers, no analytics, no cookies. This page stores nothing about you.</p>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/review.js"></script>
+</body>
+</html>
