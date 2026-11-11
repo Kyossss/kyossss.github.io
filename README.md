@@ -119,15 +119,14 @@ https://kyossss.github.io/review.html?server=Tokyo%20Core%20SMP
 
 ### One thing to set up, once
 
-`REVIEW.webhook` in `data.js`. In Discord: **Server Settings → Integrations → Webhooks →
-New Webhook**, pointed at a private channel only you can read. Copy the URL in. Every
-submitted review arrives there as an embed within seconds — that channel is the only place
-a review is ever stored. There is no database and no server behind this page.
+`REVIEW.webhook` in `data.js`. **Never put a raw Discord webhook URL here.** This repo is
+public and GitHub Pages serves plain files, so anything in `data.js` is readable by anyone and
+stays in git history even after you remove it. A webhook URL is a password: whoever has it can
+post into your channel.
 
-**The URL is readable by anyone who views the page source.** That is the price of having no
-backend: someone who goes looking can post junk into that one channel. If it ever happens,
-delete the webhook in Discord and paste the new URL here — the old one dies instantly. So
-point it at a throwaway channel, never one that matters.
+To get reviews delivered automatically, `webhook` has to point at a small relay you control
+(for example a free Cloudflare Worker) that keeps the real Discord webhook as a server-side
+secret and forwards validated, rate-limited submissions.
 
 Leave `webhook` empty and the page still works end to end: it hands the client their
 finished review as text to send you directly, rather than losing it.

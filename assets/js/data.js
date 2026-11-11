@@ -38,20 +38,16 @@ const SITE = {
  *   https://<your-pages-url>/review.html?server=Tokyo%20Core%20SMP
  * The page greets them by server, and the name is pre-filled for them.
  *
- * webhook: a Discord webhook URL. Server Settings → Integrations →
- * Webhooks → New Webhook, pointed at a private channel only you can read.
- * Every submitted review is POSTed there as an embed; that channel is the
- * only place a review is ever stored. Leave it empty and the page still
- * works — it hands the client their review as text to send you instead.
- *
- * The URL is visible in this file to anyone who views the page source.
- * That is the trade for having no backend: someone who finds it can post
- * junk into that one channel. If that happens, delete the webhook in
- * Discord and paste the new URL here — the old one dies instantly.
- * Never point it at a channel that matters.
+ * webhook: MUST stay empty, or point at a relay you control (e.g. a
+ * Cloudflare Worker that holds the Discord webhook as a server-side secret).
+ * NEVER paste a raw discord.com/api/webhooks/... URL here: this is a public
+ * GitHub Pages repo, so anything in this file is readable by everyone, and
+ * it stays in git history even after you delete it.
+ * Empty = the page still works; it hands the client their review as text
+ * to send you directly.
  */
 const REVIEW = {
-  webhook: "https://discord.com/api/webhooks/1549388566201897062/dY4v-EnIpAfsBmScSk5_O1ihfDPCXqD_tHccypwc_5w0oLKgBkTfwXQgb-scksYTkqu2",
+  webhook: "",
 
   // The four things a client scores. Rename freely; the page adapts.
   criteria: [
