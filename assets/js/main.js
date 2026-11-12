@@ -98,9 +98,15 @@
           "</p>";
       }
 
+      var link = s.link
+        ? '<a class="btn btn-small server-link" href="' + esc(s.link.href) + '">' +
+            esc(s.link.label) + "</a>"
+        : "";
+
       return '<article class="server">' +
         '<div class="server-logo">' +
-          '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy">' +
+          '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy"' +
+            (s.pixelLogo ? ' class="is-pixel"' : "") + ">" +
           '<span class="server-logo-fallback" hidden>' + esc(s.name) + "</span>" +
         "</div>" +
         '<div class="server-body">' +
@@ -108,6 +114,7 @@
           '<p class="server-role">' + esc(s.role) + "</p>" +
           (s.blurb ? '<p class="server-blurb">' + esc(s.blurb) + "</p>" : "") +
           (tags ? '<ul class="server-tags">' + tags + "</ul>" : "") +
+          link +
           review +
         "</div>" +
       "</article>";

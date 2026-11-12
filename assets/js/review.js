@@ -466,8 +466,15 @@
       return;
     }
 
-    if (!CFG.webhook) {
+    if (!CFG.endpoint || !CFG.turnstileSiteKey) {
       finish(d, "nowebhook");
+      return;
+    }
+
+    var token = turnstileToken();
+    if (!token) {
+      status.classList.add("is-bad");
+      text(status, "One moment: the quick anti-spam check above the button has not finished yet.");
       return;
     }
 
@@ -475,10 +482,10 @@
     sendBtn.disabled = true;
     text(status, "Sending…");
 
-    fetch(CFG.webhook, {
+    fetch(CFG.endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload(d))
+      body: JSON.stringify({ review: d, token: token })
     })
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -487,11 +494,39 @@
       .catch(function () {
         sending = false;
         sendBtn.disabled = false;
+        resetTurnstile();
         status.classList.add("is-bad");
         text(status, "That did not go through. Try once more — or copy your review below and send it to me directly.");
         offerFallback(d);
       });
   });
+
+  /* ---------- Turnstile (anti-spam check, verified by the relay) ---------- */
+
+  var turnstileId = null;
+
+  function turnstileToken() {
+    if (turnstileId === null || !window.turnstile) return "";
+    return window.turnstile.getResponse(turnstileId) || "";
+  }
+
+  function resetTurnstile() {
+    if (turnstileId !== null && window.turnstile) window.turnstile.reset(turnstileId);
+  }
+
+  if (CFG.endpoint && CFG.turnstileSiteKey) {
+    window.onRvTurnstile = function () {
+      turnstileId = window.turnstile.render("#rv-turnstile", {
+        sitekey: CFG.turnstileSiteKey,
+        theme: "dark"
+      });
+    };
+    var ts = document.createElement("script");
+    ts.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onRvTurnstile";
+    ts.async = true;
+    ts.defer = true;
+    document.head.appendChild(ts);
+  }
 
   function offerFallback(d) {
     if ($("rv-fallback")) return;

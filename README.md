@@ -1,6 +1,6 @@
 # Plugin portfolio
 
-A static portfolio of the eleven Trident plugins I authored, aimed at Minecraft server
+A static portfolio of the plugins I've written (the 29-module Trident suite plus client commissions), aimed at Minecraft server
 owners. Plain HTML, CSS and JavaScript — no build step, no dependencies, no Node.
 Open `index.html` in a browser and it works.
 
@@ -20,8 +20,8 @@ Portfolio/
 
 ## The only file you need to edit
 
-**`assets/js/data.js`.** The intro, the stat tiles, the contact details, and all eleven
-plugin entries live there as plain objects. Change a value, save, refresh.
+**`assets/js/data.js`.** The intro, the stat tiles, the contact details, and every
+plugin entry live there as plain objects. Change a value, save, refresh.
 
 ### Contact details
 
@@ -30,32 +30,17 @@ Set in `SITE`: Discord `kyoss`, email `Kyoush303@gmail.com`, GitHub
 
 A contact entry with no value is simply not rendered, so deleting one is safe.
 
-## What is on it, and what is not
+## What is on it
 
-Eleven plugins: **TridentSkins, TridentCameraAPI, TridentEmotes, TridentPets,
-TridentSocials, TridentTrade, TridentDuels, TridentUtilities, TridentGravestone,
-TridentNotify, CombatSystem.**
+Thirty-one plugins: all 29 modules of the Trident suite, the Typewriter
+`TridentIntroExtension`, and **DiceFish**, a commission for Dice SMP (listed under
+"Client work"). The Tokio optimisation figures on the TokyoCore card are published with
+the client's permission.
 
-Deliberately excluded: **TridentCore, Lands, Ranks, Menu, Backpack, Avatars, Chests** —
-majority-authored by M0rk, and **TridentShowcase**, which Kyo confirmed is not his despite
-git reading that way. The "How I work" section still refers to the shared architecture,
-because that is the context these eleven run in, but it claims none of those plugins as
-mine.
-
-### On the Antigravity byline
-
-`TridentTrade` and `TridentNotify` carry `authors: [Antigravity]` in their `plugin.yml`,
-and `TridentTrade/README.md` repeats it. **Antigravity is the AI coding tool, not a
-person** — see `TridentSkins/tridentskin-wardrobe-antigravity-brief.md`, which opens
-"Paste everything below into Antigravity as the task description." It is a tool credit, so
-it is not carried onto this page and both plugins are listed as mine.
-
-Those bylines still sit in the plugin source. Changing them is a separate job: it touches
-two shipped plugins and so needs a version bump and a deploy each, per the suite's release
-rules.
-
-Every claim on the page is drawn from the module READMEs in `TridentPlugins/`. If a plugin
-changes, the page does not update itself — edit `data.js`.
+Every claim on the page is drawn from the module READMEs and commit history in
+`TridentPlugins/`, the DiceFish README, and `Tokio/OPTIMIZATION-LOG.md`. If a plugin
+changes, the page does not update itself — edit `data.js`. Class counts are `.java` files
+under `src/main`.
 
 ## Publishing to GitHub Pages
 
@@ -94,7 +79,11 @@ Any repo name, e.g. `plugin-portfolio`. Same commands with that name, then in th
 ## Servers section
 
 `SERVERS` in `data.js` drives the "Servers I worked on" cards. Logos live in
-`assets/img/servers/`.
+`assets/img/servers/`. Dice SMP's is its own 64×64 server icon (from the server's
+`plugins/MiniMOTD/icons/`); `pixelLogo: true` draws it at a crisp 128px instead of blurring it.
+
+`link: { href, label }` on a server adds a button under its tags — TokyoCore's leads to
+`tokyocore.html`, the case study (styled by `assets/css/case.css`).
 
 **Filenames must be lowercase.** Windows ignores case, GitHub Pages does not, so a logo
 saved as `TokyoCore.png` works locally and 404s once published. A missing logo falls back
@@ -160,7 +149,7 @@ Append an object to `PLUGINS` in `data.js`:
   name: "TridentExample",
   sub: "one-line descriptor",
   icon: "🧪",                 // any emoji
-  category: "gameplay",       // cosmetics | social | gameplay | infra
+  category: "gameplay",       // client | cosmetics | social | gameplay | economy | hub | staff | infra
   scale: "12 classes",        // the credibility line under the card
   pitch: "What the server owner gets, in one sentence.",
   detail: ["A bullet.", "Another."],
