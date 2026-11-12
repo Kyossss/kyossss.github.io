@@ -305,6 +305,14 @@ main { position: relative; z-index: 1; }
   object-fit: contain;
   display: block;
 }
+/* a 64x64 Minecraft server icon: scale by a whole number, keep pixels square */
+.server-logo img.is-pixel {
+  width: 128px; height: 128px;
+  image-rendering: pixelated;
+  border-radius: var(--radius-sm);
+}
+.btn-small { padding: .55rem 1.1rem; font-size: .86rem; }
+.server-link { margin-top: 1.2rem; }
 .server-logo-fallback {
   font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em;
   color: var(--ink); text-align: center;

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokyoCore Optimisation — Kyoss</title>
+<meta name="description" content="How a live 80-player SMP got its tick budget back in 14 days: profiling, a repaired config that had silently undone 34 optimisations, and measured before-and-after results.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/case.css">
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="index.html">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <span class="brand-name">Kyoss</span>
+  </a>
+  <nav>
+    <a href="index.html#work">Plugins</a>
+    <a href="index.html#servers">Servers</a>
+    <a href="index.html#contact" class="nav-cta">Hire me</a>
+  </nav>
+</header>
+
+<main class="case">
+
+  <section class="case-hero">
+    <a class="case-back" href="index.html#servers">← All servers</a>
+    <img class="case-logo" src="assets/img/servers/tokyocore.png" alt="TokyoCore logo">
+    <p class="eyebrow">Case study · Server optimisation</p>
+    <h1>What I did on TokyoCore</h1>
+    <p class="case-lede">
+      A survival SMP regularly holding 80+ players was dropping to 15 TPS. I had 14 days, a
+      live server and no appetite for downtime. This is what I found, what I changed, and what
+      I deliberately didn't change.
+    </p>
+    <ul class="case-facts">
+      <li><b>14 days</b><span>contract, delivered on time</span></li>
+      <li><b>80+</b><span>players at peak</span></li>
+      <li><b>Purpur / Leaf</b><span>server software</span></li>
+      <li><b>0</b><span>changes made without the owner's approval</span></li>
+    </ul>
+  </section>
+
+  <section class="case-section">
+    <h2>The results</h2>
+    <p class="case-intro">
+      Measured with spark against a baseline taken at 80 players, before I changed anything.
+      The figures are each system's share of server time.
+    </p>
+    <div class="case-table-wrap">
+      <table class="case-table">
+        <thead><tr><th>Area</th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>Garbage collection share of wall clock</td><td>1.70%</td><td class="win">0.52%</td></tr>
+          <tr><td>Entity tracker on the main thread <small>(moved off-thread)</small></td><td>6.14%</td><td class="win">0%</td></tr>
+          <tr><td>Packet handling on the main thread</td><td>24.56%</td><td class="win">11.42%</td></tr>
+          <tr><td>Time inside plugin listeners</td><td>14.54%</td><td class="win">7.14%</td></tr>
+          <tr><td>Villager ticking</td><td>3.99%</td><td class="win">1.00%</td></tr>
+          <tr><td>Villager POI searches</td><td>1.44%</td><td class="win">0.05%</td></tr>
+          <tr><td>CoreProtect database</td><td>42.0 GB</td><td class="win">32.8 GB</td></tr>
+          <tr><td>Inventory-backup database</td><td>1.73 GB</td><td class="win">622 MB</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="case-aside">
+      <b>A harder test, same server.</b> Two days in, I measured again at 86 players, when the
+      server was carrying 97% more entities than at baseline because the farms had grown. TPS
+      still rose from 15.73 to 17.03, and the slowest 5% of ticks went from 121 ms to 105 ms.
+      Every change was re-verified on day 7 and again on day 14, and all were still in place.
+    </p>
+  </section>
+
+  <section class="case-section">
+    <h2>What I did</h2>
+    <ol class="case-steps">
+      <li>
+        <h3>Measured first</h3>
+        <p>
+          A full spark capture at 80 players and four hours of uptime: tick times, CPU,
+          garbage collection, heap and an allocation profile. Every later decision was checked
+          against it.
+        </p>
+      </li>
+      <li>
+        <h3>Sized the heap properly</h3>
+        <p>
+          The JVM was starting at 128 MB and allowed to grow to 26 GB, so it collected garbage
+          every 3.8 seconds. A fixed 16 GB heap made collections four times rarer and cut their
+          share of server time from 1.70% to 0.52%. Heap use fell from 12 GB to 4 GB.
+        </p>
+      </li>
+      <li>
+        <h3>Found a silent failure, and repaired it</h3>
+        <p>
+          Before I started, someone had edited the server's main performance config and left
+          one line of invalid YAML. On the next restart the server couldn't read the file,
+          quietly replaced it with defaults, and <strong>34 optimisations were switched off
+          with no visible error</strong>. I rebuilt the file from a clean, current copy,
+          restored every lost setting, and checked 52 keys back from the server. That same
+          session had also left behind a setting that logged 13 errors at every startup, which
+          I removed.
+        </p>
+      </li>
+      <li>
+        <h3>Fixed the villagers</h3>
+        <p>
+          220 villagers were searching 48 blocks around them over and over, which made them
+          nearly 5% of all memory allocation. Cutting the search radius to 16 and throttling it
+          dropped villager ticking from 3.99% to 1.00%. They still trade exactly as before.
+        </p>
+      </li>
+      <li>
+        <h3>Changed strategy when the server became CPU-bound</h3>
+        <p>
+          Moving work onto other threads freed the main thread, until the 8 cores were fully
+          used. From then on, moving work elsewhere would have made things worse, so I switched
+          to <em>removing</em> work instead: trimming what the block logger records (water and
+          lava flow, leaf decay, tree growth), capping how often inventories are backed up,
+          throttling an effects library's refresh loop, and shrinking oversized thread pools.
+        </p>
+      </li>
+      <li>
+        <h3>Followed the last stall to its real cause</h3>
+        <p>
+          The remaining stalls at 80 players weren't the CPU. On the final day I traced them
+          to disk I/O, and handed it over with the evidence rather than tuning settings that
+          wouldn't have helped.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="case-section">
+    <h2>How I worked</h2>
+    <div class="case-grid">
+      <article>
+        <h3>Backed up, approved, verified</h3>
+        <p>
+          A verified backup came before the first change. Every change was proposed and cleared
+          with the owner first, made as a targeted line edit with the comments kept, checked as
+          valid YAML, uploaded, then read back from the server key by key. Every batch had a
+          written rollback.
+        </p>
+      </article>
+      <article>
+        <h3>Gameplay changes aren't optimisations</h3>
+        <p>
+          The review list I was given included slowing spawners by about 50%, breaking entity
+          pushing for farms, and turning off a reach check. All of them would have bought
+          performance with the players' experience, so I said no to all of them. I also
+          restored mob targeting another edit had made sluggish.
+        </p>
+      </article>
+      <article>
+        <h3>Read the comments, not the forum post</h3>
+        <p>
+          One planned setting turned out to be in milliseconds, not ticks, so as planned it
+          would have done nothing. Another was in seconds, and changing it would have broken
+          the feature behind it. Both were caught by reading the config before editing it.
+        </p>
+      </article>
+      <article>
+        <h3>Honest about what's left</h3>
+        <p>
+          The owner received a written log of every change, copies of every file before it was
+          changed, and a list of open items that needed their decision: a plugin causing a
+          freeze after each restart, a database purge that needs a maintenance window, and
+          disk usage.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="contact-card">
+      <h2>Is your server losing ticks?</h2>
+      <p>
+        I'll profile it before touching anything, and tell you what's actually costing you,
+        including when the answer isn't a config setting.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="index.html#contact">Get in touch</a>
+        <a class="btn" href="index.html#servers">Back to the portfolio</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>Figures from the engagement's optimisation log, published with the server owner's permission.</p>
+</footer>
+
+</body>
+</html>

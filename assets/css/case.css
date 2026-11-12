@@ -1,0 +1,99 @@
+/* Case-study pages (tokyocore.html). Reads the tokens in style.css. */
+
+.case {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 0 16px;
+}
+
+.case-hero { padding: 3.5rem 0 2.5rem; }
+.case-back {
+  display: inline-block; margin-bottom: 2rem;
+  color: var(--ink-soft); text-decoration: none; font-size: .9rem;
+}
+.case-back:hover { color: var(--accent); }
+.case-logo {
+  display: block; height: 72px; width: auto; max-width: 100%;
+  margin-bottom: 1.6rem;
+}
+.case-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1;
+  letter-spacing: -.03em; margin: .4rem 0 1rem;
+}
+.case-lede { color: var(--ink-soft); font-size: 1.08rem; max-width: 62ch; margin: 0; }
+
+.case-facts {
+  list-style: none; margin: 2.2rem 0 0; padding: 0;
+  display: grid; gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  background: var(--line-soft);
+  border: 1px solid var(--line-soft); border-radius: var(--radius);
+  overflow: hidden;
+}
+.case-facts li { background: var(--bg-raise); padding: 1.1rem 1.2rem; }
+.case-facts b { display: block; font-size: 1.35rem; color: var(--accent); letter-spacing: -.02em; }
+.case-facts span { font-size: .8rem; color: var(--ink-faint); }
+
+.case-section { padding: 2.5rem 0; border-top: 1px solid var(--line-soft); }
+.case-section h2 { font-size: 1.6rem; letter-spacing: -.02em; margin: 0 0 .6rem; }
+.case-intro { color: var(--ink-soft); margin: 0 0 1.4rem; }
+
+.case-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+.case-table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+.case-table th, .case-table td { padding: .75rem 1rem; text-align: left; }
+.case-table th {
+  font-family: var(--mono); font-size: .72rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint); background: var(--bg-alt);
+}
+.case-table td:not(:first-child), .case-table th:not(:first-child) {
+  font-family: var(--mono); white-space: nowrap; text-align: right;
+}
+.case-table tbody tr { border-top: 1px solid var(--line-soft); }
+.case-table td { color: var(--ink-soft); }
+.case-table td:first-child { color: var(--ink); }
+.case-table td.win { color: var(--accent); font-weight: 600; }
+
+.case-aside {
+  margin: 1.4rem 0 0; padding: 1rem 1.2rem;
+  background: var(--bg-raise); border-left: 3px solid var(--accent-dim);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft); font-size: .93rem;
+}
+.case-aside b { color: var(--ink); }
+
+.case-steps { list-style: none; counter-reset: step; margin: 1.4rem 0 0; padding: 0; }
+.case-steps li {
+  counter-increment: step;
+  position: relative; padding: 0 0 1.6rem 3.2rem;
+}
+.case-steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: .1rem;
+  width: 2.1rem; height: 2.1rem; display: grid; place-items: center;
+  border: 1px solid var(--accent-dim); border-radius: 50%;
+  font-family: var(--mono); font-size: .85rem; color: var(--accent);
+}
+.case-steps h3 { margin: 0 0 .3rem; font-size: 1.08rem; }
+.case-steps p { margin: 0; color: var(--ink-soft); }
+.case-steps strong { color: var(--ink); }
+
+.case-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 1.4rem; }
+.case-grid article {
+  background: var(--bg-raise); border: 1px solid var(--line-soft);
+  border-radius: var(--radius); padding: 1.3rem 1.4rem;
+}
+.case-grid h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.case-grid p { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+
+.case .section { padding-left: 0; padding-right: 0; }
+
+@media (max-width: 560px) {
+  .case-table th, .case-table td { padding: .65rem .7rem; }
+  .case-table { font-size: .86rem; }
+  .case-grid { grid-template-columns: 1fr; }
+}
+.case-table td small { display: block; color: var(--ink-faint); font-size: .78rem; }
