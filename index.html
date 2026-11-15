@@ -14,61 +14,80 @@
 </head>
 <body>
 
-<a class="skip" href="#featured">Skip to the work</a>
+<a class="skip" href="#work">Skip to the plugins</a>
 
-<div class="shell">
-  <aside class="side">
-    <h1><span data-site="handle">Kyoss</span><span>.</span></h1>
-    <p class="role" data-site="role"></p>
-    <p class="bio" id="bio"></p>
+<div class="top">
+  <header class="nav wrap">
+    <a class="brand" href="#top"><span class="brand-name" data-site="handle">Kyoss</span></a>
     <nav aria-label="Sections">
-      <ul class="toc">
-        <li><a href="#featured">Selected work</a></li>
-        <li><a href="#catalogue">Everything else</a></li>
-        <li><a href="#servers">Servers</a></li>
-        <li><a href="#approach">How I work</a></li>
-        <li><a href="#contact">Hire me</a></li>
-      </ul>
+      <a href="#work">Plugins</a>
+      <a href="#servers">Servers</a>
+      <a href="#approach">How I work</a>
+      <a href="#contact" class="nav-cta">Hire me</a>
     </nav>
-    <div class="side-foot" id="side-foot"></div>
-  </aside>
-
-  <main class="main">
-    <section class="block" id="featured">
-      <div class="block-head"><h2>Selected work</h2><span id="featured-count"></span></div>
-      <div class="bento" id="bento"></div>
-    </section>
-
-    <section class="block" id="catalogue">
-      <div class="block-head"><h2>Everything else</h2><span>by area</span></div>
-      <div id="groups"></div>
-    </section>
-
-    <section class="block" id="servers">
-      <div class="block-head"><h2>Servers</h2><span>built for and tuned</span></div>
-      <div id="server-list"></div>
-    </section>
-
-    <section class="block" id="approach">
-      <div class="block-head"><h2>How I work</h2><span>the part that matters after launch day</span></div>
-      <div class="steps" id="steps"></div>
-    </section>
-
-    <section class="block" id="contact">
-      <div class="hire">
-        <div>
-          <h2 data-site="hireTitle"></h2>
-          <p data-site="hireText"></p>
-        </div>
-        <ul id="hire-list"></ul>
-      </div>
-    </section>
-
-    <footer class="foot">
-      <p>Built by hand: plain HTML, CSS and JavaScript, with no build step and no third-party requests.</p>
-    </footer>
-  </main>
+  </header>
 </div>
+
+<main id="top">
+  <section class="intro wrap">
+    <p class="eyebrow" data-site="role"></p>
+    <h1>Custom plugins, <em>built from scratch.</em></h1>
+    <p class="lead" id="bio"></p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#work">See the plugins</a>
+      <a class="btn" href="#contact">Start a project</a>
+    </div>
+    <ul class="facts" id="facts"></ul>
+  </section>
+
+  <section class="part wrap" id="work">
+    <div class="part-head">
+      <div>
+        <p class="eyebrow">Plugins</p>
+        <h2>Things I've built</h2>
+        <p>Click any plugin for what it does and its commands.</p>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by area"></div>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="more-row"><button class="btn" type="button" id="more" hidden></button></div>
+  </section>
+
+  <section class="part wrap" id="servers">
+    <div class="part-head">
+      <div>
+        <p class="eyebrow">Servers</p>
+        <h2>Where it runs</h2>
+      </div>
+    </div>
+    <div class="servers" id="server-list"></div>
+  </section>
+
+  <section class="part wrap" id="approach">
+    <div class="part-head">
+      <div>
+        <p class="eyebrow">How I work</p>
+        <h2>The part that matters after launch day</h2>
+      </div>
+    </div>
+    <ol class="steps" id="steps"></ol>
+  </section>
+
+  <section class="part wrap" id="contact">
+    <div class="hire">
+      <div>
+        <h2 data-site="hireTitle"></h2>
+        <p data-site="hireText"></p>
+      </div>
+      <ul id="hire-list"></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="foot wrap home-foot">
+  <p>&copy; <span id="year"></span> Kyoss</p>
+  <p>Plain HTML, CSS and JavaScript. No build step, no third-party requests.</p>
+</footer>
 
 <div class="scrim" data-close></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" inert>

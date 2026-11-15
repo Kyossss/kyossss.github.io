@@ -6,7 +6,7 @@ third-party requests (the fonts are self-hosted). Open `index.html` in a browser
 
 ```
 Portfolio/
-├── index.html              the page structure: sidebar + selected work + everything else
+├── index.html              the page structure: nav, intro, plugins, servers, how I work, contact
 ├── tokyocore.html          the TokyoCore case study, linked from its server entry
 ├── review.html             the client review form — sent by link, not linked to
 ├── .nojekyll               stops GitHub Pages running Jekyll over it
@@ -16,24 +16,22 @@ Portfolio/
     ├── css/case.css        case-study pages only; reads the same tokens
     ├── fonts/              Bricolage Grotesque + Figtree, latin, SIL OFL 1.1
     ├── js/data.js          ← EDIT THIS. Every word on the site.
-    ├── js/main.js          behaviour: rendering, the detail drawer. You should not need to touch it.
+    ├── js/main.js          behaviour: rendering, the plugin filters, the detail drawer. You should not need to touch it.
     ├── js/review.js        behaviour: the review form. Same — configure it in data.js.
     └── img/favicon.svg
 ```
 
 ## The only file you need to edit
 
-**`assets/js/data.js`.** The sidebar text, the contact details, the closing panel, the
+**`assets/js/data.js`.** The intro text, the contact details, the closing panel, the
 "How I work" points and every plugin entry live there as plain objects. Change a value,
 save, refresh.
 
 - `SITE.bio` can contain `{plugins}` and `{classes}`; both are counted from `PLUGINS`
   (classes from each entry's `scale` line), so they never go stale.
-- `FEATURED` lists the plugin ids shown large under "Selected work", in order; the first
-  gets the widest tile. Every other plugin is listed under "Everything else", grouped by
-  its category.
-- A plugin's optional `status` (e.g. `"Not yet tested in game"`) shows as a flag on its
-  featured tile.
+- `FEATURED` lists the plugin ids shown first under "Things I've built", in order. The rest
+  appear after "Show all", grouped by category; each area filter shows all of its plugins.
+- A plugin's optional `status` (e.g. `"Not yet tested in game"`) shows as a flag on its card.
 
 ### Contact details
 

@@ -6,7 +6,7 @@
 const SITE = {
   handle: "Kyoss",
 
-  // The sidebar. {plugins} and {classes} are counted from PLUGINS below, so
+  // The intro. {plugins} and {classes} are counted from PLUGINS below, so
   // they stay right when you add or remove one.
   role: "Minecraft plugin developer & server optimiser.",
   bio: "{plugins} plugins and {classes} classes written from scratch, plus performance work on a live 80-player server. No marketplace forks.",
@@ -27,9 +27,9 @@ const SITE = {
 };
 
 /*
- * "Selected work": the plugins shown large at the top, in this order, by id.
- * The first one gets the widest tile. Everything not listed here appears in
- * "Everything else", grouped by category.
+ * The plugins shown first under "Things I've built", in this order, by id.
+ * The rest appear after "Show all", grouped by category, and every plugin
+ * shows up under its own area filter.
  */
 const FEATURED = ["wardrobe", "emotes", "auctions", "bounty", "dicefish", "canvas"];
 
@@ -114,7 +114,7 @@ const REVIEW = {
  * pitch:    what a server OWNER gets. No internals.
  * detail:   the bullets. Concrete, verifiable.
  * note:     optional standout fact or caveat.
- * status:   optional short flag shown on a featured tile, e.g. "Not yet tested in game".
+ * status:   optional short flag shown on the plugin's card, e.g. "Not yet tested in game".
  */
 const PLUGINS = [
   /* ---------------- client work ---------------- */

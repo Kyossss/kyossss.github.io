@@ -17,15 +17,6 @@
     return c ? c.label : id;
   }
 
-  var ONES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
-    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
-  var TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-  function words(n) {
-    if (n < 20) return ONES[n];
-    if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? "-" + ONES[n % 10] : "");
-    return String(n);
-  }
-
   /* classes (or source files) from each card's scale line, e.g. "40 classes · …" */
   function classCount() {
     return PLUGINS.reduce(function (sum, p) {
@@ -34,7 +25,7 @@
     }, 0);
   }
 
-  /* ---------- sidebar and fixed text ---------- */
+  /* ---------- fixed text ---------- */
 
   function fillSite() {
     document.querySelectorAll("[data-site]").forEach(function (el) {
@@ -46,17 +37,20 @@
       .replace("{plugins}", PLUGINS.length)
       .replace("{classes}", classCount());
 
-    var links = contactLinks();
-    $("#side-foot").innerHTML = links.map(function (c) {
-      var v = c.href ? '<a href="' + esc(c.href) + '"' + (c.ext ? ' rel="noopener"' : "") + ">" + esc(c.v) + "</a>" : "<span>" + esc(c.v) + "</span>";
-      return "<div><b>" + esc(c.k) + "</b> " + v + "</div>";
+    $("#facts").innerHTML = [
+      [PLUGINS.length, "plugins written"],
+      [classCount(), "classes, no forks"],
+      ["80+", "players on a server I tuned"]
+    ].map(function (f) { return "<li><b>" + esc(f[0]) + "</b><span>" + esc(f[1]) + "</span></li>"; }).join("");
+
+    $("#hire-list").innerHTML = contactLinks().map(function (c) {
+      var inner = esc(c.v) + "<small>" + esc(c.k) + "</small>";
+      return "<li>" + (c.href
+        ? '<a href="' + esc(c.href) + '"' + (c.ext ? ' rel="noopener"' : "") + ">" + inner + "</a>"
+        : "<span>" + inner + "</span>") + "</li>";
     }).join("");
 
-    $("#hire-list").innerHTML = links.map(function (c) {
-      return "<li><small>" + esc(c.k) + "</small>" +
-        (c.href ? '<a href="' + esc(c.href) + '"' + (c.ext ? ' rel="noopener"' : "") + ">" + esc(c.v) + "</a>" : "<span>" + esc(c.v) + "</span>") +
-        "</li>";
-    }).join("");
+    $("#year").textContent = new Date().getFullYear();
   }
 
   function contactLinks() {
@@ -67,41 +61,57 @@
     return l;
   }
 
-  /* ---------- selected work ---------- */
+  /* ---------- plugins: featured first, then the rest by area ---------- */
 
-  function featured() { return FEATURED.map(byId).filter(Boolean); }
+  function ordered() {
+    var first = FEATURED.map(byId).filter(Boolean);
+    var rest = [];
+    CATEGORIES.forEach(function (c) {
+      PLUGINS.forEach(function (p) {
+        if (p.category === c.id && FEATURED.indexOf(p.id) < 0) { rest.push(p); }
+      });
+    });
+    return first.concat(rest);
+  }
 
-  function renderFeatured() {
-    var list = featured();
-    $("#featured-count").textContent = words(list.length) + " of " + words(PLUGINS.length);
+  function renderCards() {
+    var used = CATEGORIES.filter(function (c) {
+      return c.id === "all" || PLUGINS.some(function (p) { return p.category === c.id; });
+    });
+    $("#chips").innerHTML = used.map(function (c) {
+      return '<button class="chip" type="button" data-cat="' + esc(c.id) + '" aria-pressed="' + (c.id === "all") + '">' +
+        esc(c.id === "all" ? "All" : c.label) + "</button>";
+    }).join("");
 
-    $("#bento").innerHTML = list.map(function (p) {
-      return '<button class="tile" type="button" data-id="' + esc(p.id) + '">' +
-        '<span class="ghost" aria-hidden="true">' + esc(p.name.replace(/^Trident/, "")) + "</span>" +
-        '<span class="k">' + esc(catLabel(p.category)) + " · " + esc(p.sub) + "</span>" +
+    $("#cards").innerHTML = ordered().map(function (p) {
+      return '<button class="card" type="button" data-id="' + esc(p.id) + '" data-cat="' + esc(p.category) + '">' +
+        '<span class="k">' + esc(catLabel(p.category)) + "</span>" +
         "<h3>" + esc(p.name) + "</h3>" +
         "<p>" + esc(p.pitch) + "</p>" +
         (p.status ? '<span class="status">' + esc(p.status) + "</span>" : "") +
-        '<span class="go">' + esc(p.scale) + "</span>" +
-        '<span class="arrow" aria-hidden="true">→</span>' +
+        '<span class="go"><span>' + esc(p.scale) + '</span><i aria-hidden="true">→</i></span>' +
       "</button>";
     }).join("");
   }
 
-  /* ---------- everything else, grouped ---------- */
+  /* "All" shows the featured plugins until "Show all" is pressed;
+     an area chip always shows everything in that area */
+  var current = "all", expanded = false;
 
-  function renderGroups() {
-    var shown = FEATURED;
-    $("#groups").innerHTML = CATEGORIES.filter(function (c) { return c.id !== "all"; }).map(function (c) {
-      var list = PLUGINS.filter(function (p) { return p.category === c.id && shown.indexOf(p.id) < 0; });
-      if (!list.length) { return ""; }
-      return '<div class="group"><h3>' + esc(c.label) +
-          "<small>" + list.length + " plugin" + (list.length > 1 ? "s" : "") + "</small></h3>" +
-        '<div class="items">' + list.map(function (p) {
-          return '<button class="item" type="button" data-id="' + esc(p.id) + '">' +
-            "<b>" + esc(p.name) + "</b><span>" + esc(p.sub) + "</span></button>";
-        }).join("") + "</div></div>";
-    }).join("");
+  function filter(cat) {
+    current = cat;
+    document.querySelectorAll("#chips .chip").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-cat") === cat));
+    });
+    document.querySelectorAll("#cards .card").forEach(function (c) {
+      var id = c.getAttribute("data-id");
+      c.hidden = cat === "all"
+        ? !expanded && FEATURED.indexOf(id) < 0
+        : c.getAttribute("data-cat") !== cat;
+    });
+    var more = $("#more");
+    more.hidden = cat !== "all" || expanded;
+    more.textContent = "Show all " + PLUGINS.length + " plugins";
   }
 
   /* ---------- servers ---------- */
@@ -117,14 +127,14 @@
         '<div class="logo">' +
           '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy"' + (s.pixelLogo ? ' class="px"' : "") + ">" +
           '<span class="logo-fallback" hidden>' + esc(s.name) + "</span>" +
-        "</div><div>" +
-          "<h3>" + esc(s.name) + "</h3>" +
-          '<p class="r">' + esc(s.role) + "</p>" +
-          (s.blurb ? "<p>" + esc(s.blurb) + "</p>" : "") +
-          (tags ? '<div class="tags">' + tags + "</div>" : "") +
-          (s.link ? '<a class="btn btn-primary btn-small" href="' + esc(s.link.href) + '">' + esc(s.link.label) + "</a>" : "") +
-          review +
-        "</div></article>";
+        "</div>" +
+        "<h3>" + esc(s.name) + "</h3>" +
+        '<p class="r">' + esc(s.role) + "</p>" +
+        (s.blurb ? "<p>" + esc(s.blurb) + "</p>" : "") +
+        (tags ? '<div class="tags">' + tags + "</div>" : "") +
+        (s.link ? '<a class="btn btn-primary btn-small" href="' + esc(s.link.href) + '">' + esc(s.link.label) + "</a>" : "") +
+        review +
+      "</article>";
     }).join("");
 
     /* a logo file that is not there yet falls back to the server's name */
@@ -139,7 +149,7 @@
 
   function renderSteps() {
     $("#steps").innerHTML = HOW.map(function (h) {
-      return "<article><h3>" + esc(h.title) + "</h3><p>" + esc(h.text) + "</p></article>";
+      return "<li><h3>" + esc(h.title) + "</h3><p>" + esc(h.text) + "</p></li>";
     }).join("");
   }
 
@@ -178,6 +188,9 @@
   }
 
   document.addEventListener("click", function (e) {
+    if (e.target.closest("#more")) { expanded = true; filter(current); return; }
+    var chip = e.target.closest(".chip[data-cat]");
+    if (chip) { filter(chip.getAttribute("data-cat")); return; }
     var t = e.target.closest("[data-id]");
     if (t) { open(t.getAttribute("data-id")); return; }
     if (e.target.closest("[data-close]")) { close(); }
@@ -186,26 +199,9 @@
     if (e.key === "Escape") { close(); }
   });
 
-  /* ---------- the sidebar follows the scroll ---------- */
-
-  function spy() {
-    var links = document.querySelectorAll(".toc a");
-    if (!("IntersectionObserver" in window)) { return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) { return; }
-        links.forEach(function (a) {
-          a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id);
-        });
-      });
-    }, { rootMargin: "-40% 0px -55% 0px" });
-    document.querySelectorAll(".block").forEach(function (b) { io.observe(b); });
-  }
-
   fillSite();
-  renderFeatured();
-  renderGroups();
+  renderCards();
+  filter("all");
   renderServers();
   renderSteps();
-  spy();
 })();
