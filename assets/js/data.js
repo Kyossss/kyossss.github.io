@@ -5,31 +5,74 @@
 
 const SITE = {
   handle: "Kyoss",
-  tagline: "Kyoss: Minecraft Server Development Services.",
 
-  // The hero list. Add or cut lines freely — the layout adapts.
-  servicesLabel: "Which includes:",
-  services: [
-    "Minecraft Plugin Development",
-    "Minecraft Server Optimization",
-    "Plugin Maintenance and Support"
-  ],
+  // The sidebar. {plugins} and {classes} are counted from PLUGINS below, so
+  // they stay right when you add or remove one.
+  role: "Minecraft plugin developer & server optimiser.",
+  bio: "{plugins} plugins and {classes} classes written from scratch, plus performance work on a live 80-player server. No marketplace forks.",
 
   // ---- EDIT THESE ----
   discord: "kyoss",
-  discordIcon: "assets/img/icons/Discord-Symbol-Blurple.svg",
   email: "Kyoush303@gmail.com",
   github: "https://github.com/Kyossss",
   // --------------------
 
-  stats: [
-    { n: "31", label: "plugins written" },
-    { n: "938", label: "classes written" },
-    { n: "3", label: "servers worked on" },
-    { n: "26.1.2", label: "Paper, on Java 25" },
-    { n: "0", label: "marketplace forks" }
-  ]
+  // The closing panel.
+  hireTitle: "Need something your server can't buy?",
+  hireText:
+    "Custom plugin work, any of the above adapted to your server, or a look at why your " +
+    "existing setup is running badly. Tell me what your server does that the marketplace " +
+    "plugins cannot — or where it is losing ticks — and I will tell you honestly whether it " +
+    "is worth doing."
 };
+
+/*
+ * "Selected work": the plugins shown large at the top, in this order, by id.
+ * The first one gets the widest tile. Everything not listed here appears in
+ * "Everything else", grouped by category.
+ */
+const FEATURED = ["wardrobe", "emotes", "auctions", "bounty", "dicefish", "canvas"];
+
+/* "How I work". */
+const HOW = [
+  {
+    title: "Built as a suite, not a pile",
+    text:
+      "The Trident plugins are one 29-module system. No plugin reaches into another plugin's " +
+      "classes. Everything goes through one shared core that owns the database pool, the " +
+      "economy layer, the command router and the service registry. Adding the thirtieth " +
+      "plugin costs the same as adding the second."
+  },
+  {
+    title: "Measured, not guessed",
+    text:
+      "Performance work starts with a profile, not a list of settings copied off a forum post. " +
+      "I find what is actually costing your server its tick budget, change that, and measure " +
+      "again — on a running server, without the downtime a rebuild would cost you."
+  },
+  {
+    title: "Optional dependencies stay optional",
+    text:
+      "Every external hook degrades instead of failing. No Model Engine? Emotes fall back " +
+      "rather than erroring on every use. No BetterHud? Notifications drop to the next " +
+      "renderer. Your server does not go down because a dependency did."
+  },
+  {
+    title: "Versioned and shipped deliberately",
+    text:
+      "Every fix bumps that plugin's version, in the same commit, with a note saying what the " +
+      "number contains. CI builds the jars; a deploy is verified against the server " +
+      "afterwards, not assumed. You can always tell which build you are running."
+  },
+  {
+    title: "Documented for the next developer",
+    text:
+      "Every plugin ships a README covering commands, permissions, config keys and the API, " +
+      "including the warnings — where a setting is destructive, where a name is inconsistent. " +
+      "Two of them were rewritten from scratch because the old ones described features that " +
+      "did not exist. You are not buying a black box."
+  }
+];
 
 /*
  * review.html — the client review form.
@@ -71,6 +114,7 @@ const REVIEW = {
  * pitch:    what a server OWNER gets. No internals.
  * detail:   the bullets. Concrete, verifiable.
  * note:     optional standout fact or caveat.
+ * status:   optional short flag shown on a featured tile, e.g. "Not yet tested in game".
  */
 const PLUGINS = [
   /* ---------------- client work ---------------- */
@@ -329,6 +373,7 @@ const PLUGINS = [
       "Killing the same player again within 30 minutes doesn't count, which stops two friends trading kills to farm the server's automatic contract.",
       "Admin actions that move money or change a player are written to the staff audit log."
     ],
+    status: "Not yet tested in game",
     note: "Feature-complete, but not yet tested in game. The HUD art is still placeholder art.",
     commands: ["/bounty", "/bounty bank", "/pvp"]
   },

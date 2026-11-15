@@ -4,197 +4,208 @@
 
   var $ = function (sel) { return document.querySelector(sel); };
 
-  /* text nodes bound to SITE */
-  function fillSite() {
-    document.querySelectorAll("[data-site]").forEach(function (el) {
-      var v = SITE[el.getAttribute("data-site")];
-      if (v) { el.textContent = v; }
-    });
-
-    $("#stats").innerHTML = SITE.stats.map(function (s) {
-      return "<li><b>" + esc(s.n) + "</b><span>" + esc(s.label) + "</span></li>";
-    }).join("");
-
-    var links = [];
-    if (SITE.discord) {
-      var dIcon = SITE.discordIcon
-        ? '<img class="contact-icon" src="' + esc(SITE.discordIcon) + '" alt="" aria-hidden="true">'
-        : "\u{1F4AC}";
-      links.push("<li><span>" + dIcon + " Discord <em>" + esc(SITE.discord) + "</em></span></li>");
-    }
-    if (SITE.email) {
-      links.push('<li><a href="mailto:' + esc(SITE.email) + '">✉ ' + esc(SITE.email) + "</a></li>");
-    }
-    if (SITE.github) {
-      links.push('<li><a href="' + esc(SITE.github) + '" rel="noopener">\u{1F4C1} GitHub</a></li>');
-    }
-    $("#contact-list").innerHTML = links.join("");
-
-    var svc = $("#services");
-    if (svc && SITE.services) {
-      svc.innerHTML = SITE.services.map(function (t) {
-        return "<li>" + esc(t) + "</li>";
-      }).join("");
-    }
-  }
-
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
 
-  /* ---------- cards ---------- */
+  function byId(id) { return PLUGINS.filter(function (p) { return p.id === id; })[0]; }
 
-  var active = "all";
-
-  function render() {
-    var list = active === "all"
-      ? PLUGINS
-      : PLUGINS.filter(function (p) { return p.category === active; });
-
-    $("#grid").innerHTML = list.map(function (p) {
-      return '<button class="card" type="button" data-id="' + esc(p.id) + '">' +
-        '<span class="card-top">' +
-          '<span class="card-icon" aria-hidden="true">' + p.icon + "</span>" +
-          "<span>" +
-            '<span class="card-name">' + esc(p.name) + "</span>" +
-            '<span class="card-sub">' + esc(p.sub) + "</span>" +
-          "</span>" +
-        "</span>" +
-        '<span class="card-pitch">' + esc(p.pitch) + "</span>" +
-        '<span class="card-foot">' +
-          '<span class="card-scale">' + esc(p.scale) + "</span>" +
-          '<span class="card-more">Details →</span>' +
-        "</span>" +
-      "</button>";
-    }).join("");
-
-    $("#empty").hidden = list.length > 0;
+  function catLabel(id) {
+    var c = CATEGORIES.filter(function (x) { return x.id === id; })[0];
+    return c ? c.label : id;
   }
 
-  function buildFilters() {
-    $("#filters").innerHTML = CATEGORIES.map(function (c) {
-      return '<button class="filter" type="button" role="tab" data-cat="' + c.id + '"' +
-        ' aria-selected="' + (c.id === active) + '">' + esc(c.label) + "</button>";
+  var ONES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+  var TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  function words(n) {
+    if (n < 20) return ONES[n];
+    if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? "-" + ONES[n % 10] : "");
+    return String(n);
+  }
+
+  /* classes (or source files) from each card's scale line, e.g. "40 classes · …" */
+  function classCount() {
+    return PLUGINS.reduce(function (sum, p) {
+      var m = /(\d+)\s+(classes|files)/.exec(p.scale || "");
+      return sum + (m ? +m[1] : 0);
+    }, 0);
+  }
+
+  /* ---------- sidebar and fixed text ---------- */
+
+  function fillSite() {
+    document.querySelectorAll("[data-site]").forEach(function (el) {
+      var v = SITE[el.getAttribute("data-site")];
+      if (v) { el.textContent = v; }
+    });
+
+    $("#bio").textContent = SITE.bio
+      .replace("{plugins}", PLUGINS.length)
+      .replace("{classes}", classCount());
+
+    var links = contactLinks();
+    $("#side-foot").innerHTML = links.map(function (c) {
+      var v = c.href ? '<a href="' + esc(c.href) + '"' + (c.ext ? ' rel="noopener"' : "") + ">" + esc(c.v) + "</a>" : "<span>" + esc(c.v) + "</span>";
+      return "<div><b>" + esc(c.k) + "</b> " + v + "</div>";
+    }).join("");
+
+    $("#hire-list").innerHTML = links.map(function (c) {
+      return "<li><small>" + esc(c.k) + "</small>" +
+        (c.href ? '<a href="' + esc(c.href) + '"' + (c.ext ? ' rel="noopener"' : "") + ">" + esc(c.v) + "</a>" : "<span>" + esc(c.v) + "</span>") +
+        "</li>";
+    }).join("");
+  }
+
+  function contactLinks() {
+    var l = [];
+    if (SITE.discord) { l.push({ k: "Discord", v: SITE.discord }); }
+    if (SITE.email) { l.push({ k: "Email", v: SITE.email, href: "mailto:" + SITE.email }); }
+    if (SITE.github) { l.push({ k: "GitHub", v: SITE.github.replace(/^https?:\/\//, ""), href: SITE.github, ext: true }); }
+    return l;
+  }
+
+  /* ---------- selected work ---------- */
+
+  function featured() { return FEATURED.map(byId).filter(Boolean); }
+
+  function renderFeatured() {
+    var list = featured();
+    $("#featured-count").textContent = words(list.length) + " of " + words(PLUGINS.length);
+
+    $("#bento").innerHTML = list.map(function (p) {
+      return '<button class="tile" type="button" data-id="' + esc(p.id) + '">' +
+        '<span class="ghost" aria-hidden="true">' + esc(p.name.replace(/^Trident/, "")) + "</span>" +
+        '<span class="k">' + esc(catLabel(p.category)) + " · " + esc(p.sub) + "</span>" +
+        "<h3>" + esc(p.name) + "</h3>" +
+        "<p>" + esc(p.pitch) + "</p>" +
+        (p.status ? '<span class="status">' + esc(p.status) + "</span>" : "") +
+        '<span class="go">' + esc(p.scale) + "</span>" +
+        '<span class="arrow" aria-hidden="true">→</span>' +
+      "</button>";
+    }).join("");
+  }
+
+  /* ---------- everything else, grouped ---------- */
+
+  function renderGroups() {
+    var shown = FEATURED;
+    $("#groups").innerHTML = CATEGORIES.filter(function (c) { return c.id !== "all"; }).map(function (c) {
+      var list = PLUGINS.filter(function (p) { return p.category === c.id && shown.indexOf(p.id) < 0; });
+      if (!list.length) { return ""; }
+      return '<div class="group"><h3>' + esc(c.label) +
+          "<small>" + list.length + " plugin" + (list.length > 1 ? "s" : "") + "</small></h3>" +
+        '<div class="items">' + list.map(function (p) {
+          return '<button class="item" type="button" data-id="' + esc(p.id) + '">' +
+            "<b>" + esc(p.name) + "</b><span>" + esc(p.sub) + "</span></button>";
+        }).join("") + "</div></div>";
     }).join("");
   }
 
   /* ---------- servers ---------- */
 
   function renderServers() {
-    var host = $("#servers-list");
-    if (!host || typeof SERVERS === "undefined") { return; }
-
-    host.innerHTML = SERVERS.map(function (s) {
-      var tags = (s.tags || []).map(function (t) {
-        return '<li>' + esc(t) + "</li>";
-      }).join("");
-
+    $("#server-list").innerHTML = SERVERS.map(function (s) {
+      var tags = (s.tags || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
       var review = "";
       if (s.review) {
-        review = '<p class="server-review' + (s.pending ? " is-pending" : "") + '">' +
-          (s.pending ? "" : "“") + esc(s.review) + (s.pending ? "" : "”") +
-          "</p>";
+        review = '<p class="q' + (s.pending ? ' pending">' + esc(s.review) : '">“' + esc(s.review) + "”") + "</p>";
       }
-
-      var link = s.link
-        ? '<a class="btn btn-small server-link" href="' + esc(s.link.href) + '">' +
-            esc(s.link.label) + "</a>"
-        : "";
-
-      return '<article class="server">' +
-        '<div class="server-logo">' +
-          '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy"' +
-            (s.pixelLogo ? ' class="is-pixel"' : "") + ">" +
-          '<span class="server-logo-fallback" hidden>' + esc(s.name) + "</span>" +
-        "</div>" +
-        '<div class="server-body">' +
-          '<h3 class="server-name">' + esc(s.name) + "</h3>" +
-          '<p class="server-role">' + esc(s.role) + "</p>" +
-          (s.blurb ? '<p class="server-blurb">' + esc(s.blurb) + "</p>" : "") +
-          (tags ? '<ul class="server-tags">' + tags + "</ul>" : "") +
-          link +
+      return '<article class="srv">' +
+        '<div class="logo">' +
+          '<img src="' + esc(s.logo) + '" alt="' + esc(s.name) + ' logo" loading="lazy"' + (s.pixelLogo ? ' class="px"' : "") + ">" +
+          '<span class="logo-fallback" hidden>' + esc(s.name) + "</span>" +
+        "</div><div>" +
+          "<h3>" + esc(s.name) + "</h3>" +
+          '<p class="r">' + esc(s.role) + "</p>" +
+          (s.blurb ? "<p>" + esc(s.blurb) + "</p>" : "") +
+          (tags ? '<div class="tags">' + tags + "</div>" : "") +
+          (s.link ? '<a class="btn btn-primary btn-small" href="' + esc(s.link.href) + '">' + esc(s.link.label) + "</a>" : "") +
           review +
-        "</div>" +
-      "</article>";
+        "</div></article>";
     }).join("");
 
-    /* a logo file that is not there yet falls back to the name, so the card
-       still reads properly instead of showing a broken-image icon */
-    host.querySelectorAll(".server-logo img").forEach(function (img) {
+    /* a logo file that is not there yet falls back to the server's name */
+    document.querySelectorAll("#server-list .logo img").forEach(function (img) {
       img.addEventListener("error", function () {
         img.hidden = true;
-        var fb = img.parentNode.querySelector(".server-logo-fallback");
+        var fb = img.parentNode.querySelector(".logo-fallback");
         if (fb) { fb.hidden = false; }
       });
     });
   }
 
-  /* ---------- modal ---------- */
+  function renderSteps() {
+    $("#steps").innerHTML = HOW.map(function (h) {
+      return "<article><h3>" + esc(h.title) + "</h3><p>" + esc(h.text) + "</p></article>";
+    }).join("");
+  }
 
+  /* ---------- the detail drawer ---------- */
+
+  var drawer = $("#drawer");
   var lastFocus = null;
 
   function open(id) {
-    var p = PLUGINS.filter(function (x) { return x.id === id; })[0];
+    var p = byId(id);
     if (!p) { return; }
     lastFocus = document.activeElement;
 
-    var html =
-      '<div class="m-head">' +
-        '<div class="card-icon" aria-hidden="true">' + p.icon + "</div>" +
-        "<div>" +
-          '<div class="m-title" id="modal-title">' + esc(p.name) + "</div>" +
-          '<div class="m-sub">' + esc(p.sub) + "</div>" +
-          '<span class="m-scale">' + esc(p.scale) + "</span>" +
-        "</div>" +
-      "</div>" +
-      '<p class="m-pitch">' + esc(p.pitch) + "</p>" +
-      '<ul class="m-list">' + p.detail.map(function (d) {
-        return "<li>" + esc(d) + "</li>";
-      }).join("") + "</ul>" +
-      (p.note ? '<p class="m-note">' + esc(p.note) + "</p>" : "") +
-      '<div class="m-cmds"><h4>Commands</h4><ul>' + p.commands.map(function (c) {
-        return "<li><code>" + esc(c) + "</code></li>";
-      }).join("") + "</ul></div>";
+    $("#drawer-body").innerHTML =
+      '<span class="k">' + esc(catLabel(p.category)) + "</span>" +
+      '<h2 id="drawer-title">' + esc(p.name) + "</h2>" +
+      '<span class="sc">' + esc(p.sub) + " · " + esc(p.scale) + "</span>" +
+      '<p class="lead">' + esc(p.pitch) + "</p>" +
+      "<ul>" + p.detail.map(function (d) { return "<li>" + esc(d) + "</li>"; }).join("") + "</ul>" +
+      (p.note ? '<p class="nt">' + esc(p.note) + "</p>" : "") +
+      "<h4>Commands</h4><div>" + p.commands.map(function (c) { return "<code>" + esc(c) + "</code>"; }).join("") + "</div>";
 
-    $("#modal-body").innerHTML = html;
-    $("#modal").hidden = false;
-    document.body.style.overflow = "hidden";
-    $(".modal-close").focus();
+    drawer.inert = false;
+    drawer.removeAttribute("inert");
+    document.body.classList.add("drawer-open", "locked");
+    drawer.scrollTop = 0;
+    drawer.querySelector(".x").focus();
   }
 
   function close() {
-    $("#modal").hidden = true;
-    document.body.style.overflow = "";
+    if (!document.body.classList.contains("drawer-open")) { return; }
+    document.body.classList.remove("drawer-open", "locked");
+    drawer.inert = true;
+    drawer.setAttribute("inert", "");
     if (lastFocus) { lastFocus.focus(); }
   }
 
-  /* ---------- wiring ---------- */
-
   document.addEventListener("click", function (e) {
-    var f = e.target.closest(".filter");
-    if (f) {
-      active = f.getAttribute("data-cat");
-      $("#filters").querySelectorAll(".filter").forEach(function (b) {
-        b.setAttribute("aria-selected", String(b === f));
-      });
-      render();
-      return;
-    }
-
-    var card = e.target.closest(".card");
-    if (card) { open(card.getAttribute("data-id")); return; }
-
-    if (e.target.hasAttribute("data-close")) { close(); }
+    var t = e.target.closest("[data-id]");
+    if (t) { open(t.getAttribute("data-id")); return; }
+    if (e.target.closest("[data-close]")) { close(); }
   });
-
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !$("#modal").hidden) { close(); }
+    if (e.key === "Escape") { close(); }
   });
+
+  /* ---------- the sidebar follows the scroll ---------- */
+
+  function spy() {
+    var links = document.querySelectorAll(".toc a");
+    if (!("IntersectionObserver" in window)) { return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) { return; }
+        links.forEach(function (a) {
+          a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id);
+        });
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll(".block").forEach(function (b) { io.observe(b); });
+  }
 
   fillSite();
-  buildFilters();
-  render();
+  renderFeatured();
+  renderGroups();
   renderServers();
+  renderSteps();
+  spy();
 })();

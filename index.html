@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,136 +9,72 @@
 <meta property="og:description" content="Bespoke Paper plugin development and server performance optimisation. Thirty-one plugins written.">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<a class="skip" href="#work">Skip to the plugins</a>
+<a class="skip" href="#featured">Skip to the work</a>
 
-<header class="nav">
-  <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">◆</span>
-    <span class="brand-name" data-site="handle">Kyoss</span>
-  </a>
-  <nav>
-    <a href="#work">Plugins</a>
-    <a href="#servers">Servers</a>
-    <a href="#how">How I work</a>
-    <a href="#contact" class="nav-cta">Hire me</a>
-  </nav>
-</header>
+<div class="shell">
+  <aside class="side">
+    <h1><span data-site="handle">Kyoss</span><span>.</span></h1>
+    <p class="role" data-site="role"></p>
+    <p class="bio" id="bio"></p>
+    <nav aria-label="Sections">
+      <ul class="toc">
+        <li><a href="#featured">Selected work</a></li>
+        <li><a href="#catalogue">Everything else</a></li>
+        <li><a href="#servers">Servers</a></li>
+        <li><a href="#approach">How I work</a></li>
+        <li><a href="#contact">Hire me</a></li>
+      </ul>
+    </nav>
+    <div class="side-foot" id="side-foot"></div>
+  </aside>
 
-<main id="top">
+  <main class="main">
+    <section class="block" id="featured">
+      <div class="block-head"><h2>Selected work</h2><span id="featured-count"></span></div>
+      <div class="bento" id="bento"></div>
+    </section>
 
-  <section class="hero">
-    <p class="eyebrow">Paper 26.1.2 · Java 25 · Built from scratch</p>
-    <h1 data-site="tagline">Kyoss: Minecraft Server Development Services.</h1>
-    <p class="services-label" data-site="servicesLabel"></p>
-    <ul class="services" id="services"></ul>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#work">See the plugins</a>
-      <a class="btn" href="#contact">Start a project</a>
-    </div>
-    <ul class="stats" id="stats"></ul>
-  </section>
+    <section class="block" id="catalogue">
+      <div class="block-head"><h2>Everything else</h2><span>by area</span></div>
+      <div id="groups"></div>
+    </section>
 
-  <section id="work" class="section">
-    <div class="section-head">
-      <h2>The work</h2>
-      <p>Thirty-one plugins: a 29-module network suite, plus client commissions. Click any card for the detail.</p>
-    </div>
+    <section class="block" id="servers">
+      <div class="block-head"><h2>Servers</h2><span>built for and tuned</span></div>
+      <div id="server-list"></div>
+    </section>
 
-    <div class="filters" id="filters" role="tablist" aria-label="Filter plugins by category"></div>
+    <section class="block" id="approach">
+      <div class="block-head"><h2>How I work</h2><span>the part that matters after launch day</span></div>
+      <div class="steps" id="steps"></div>
+    </section>
 
-    <div class="grid" id="grid"></div>
-    <p class="empty" id="empty" hidden>Nothing in that category.</p>
-  </section>
+    <section class="block" id="contact">
+      <div class="hire">
+        <div>
+          <h2 data-site="hireTitle"></h2>
+          <p data-site="hireText"></p>
+        </div>
+        <ul id="hire-list"></ul>
+      </div>
+    </section>
 
-  <section id="servers" class="section">
-    <div class="section-head">
-      <h2>Servers I worked on</h2>
-      <p>Plugins built, servers tuned.</p>
-    </div>
-    <div class="servers" id="servers-list"></div>
-  </section>
-
-  <section id="how" class="section section-alt">
-    <div class="section-head">
-      <h2>How I work</h2>
-      <p>The part that matters after launch day.</p>
-    </div>
-    <div class="how-grid">
-      <article>
-        <h3>Built as a suite, not a pile</h3>
-        <p>
-          The Trident plugins are one 29-module system. No plugin reaches into another
-          plugin's classes. Everything goes through one shared core that owns the database
-          pool, the economy layer, the command router and the service registry. Adding
-          the thirtieth plugin costs the same as adding the second.
-        </p>
-      </article>
-      <article>
-        <h3>Measured, not guessed</h3>
-        <p>
-          Performance work starts with a profile, not a list of settings copied off a forum
-          post. I find what is actually costing your server its tick budget, change that, and
-          measure again — on a running server, without the downtime a rebuild would cost you.
-        </p>
-      </article>
-      <article>
-        <h3>Optional dependencies stay optional</h3>
-        <p>
-          Every external hook degrades instead of failing. No Model Engine? Emotes fall back
-          rather than erroring on every use. No BetterHud? Notifications drop to the next
-          renderer. Your server does not go down because a dependency did.
-        </p>
-      </article>
-      <article>
-        <h3>Versioned and shipped deliberately</h3>
-        <p>
-          Every fix bumps that plugin's version, in the same commit, with a note saying what
-          the number contains. CI builds the jars; a deploy is verified against the server
-          afterwards, not assumed. You can always tell which build you are running.
-        </p>
-      </article>
-      <article>
-        <h3>Documented for the next developer</h3>
-        <p>
-          Every plugin ships a README covering commands, permissions, config keys and the API,
-          including the warnings — where a setting is destructive, where a name is inconsistent.
-          Two of them were rewritten from scratch because the old ones described features that
-          did not exist. You are not buying a black box.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section id="contact" class="section">
-    <div class="contact-card">
-      <h2>Need something built?</h2>
-      <p>
-        Custom plugin work, any of the above adapted to your server, or a look at why your
-        existing setup is running badly. Tell me what your server does that the marketplace
-        plugins cannot — or where it is losing ticks — and I will tell you honestly whether it
-        is worth doing.
-      </p>
-      <ul class="contact-list" id="contact-list"></ul>
-    </div>
-  </section>
-
-</main>
-
-<footer class="foot">
-  <p>Built with Paper, Maven and no framework. This page has no build step and no dependencies.</p>
-</footer>
-
-<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal-scrim" data-close></div>
-  <article class="modal-panel" role="document">
-    <button class="modal-close" data-close aria-label="Close">×</button>
-    <div id="modal-body"></div>
-  </article>
+    <footer class="foot">
+      <p>Built by hand: plain HTML, CSS and JavaScript, with no build step and no third-party requests.</p>
+    </footer>
+  </main>
 </div>
+
+<div class="scrim" data-close></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" inert>
+  <button class="x" type="button" data-close aria-label="Close">×</button>
+  <div id="drawer-body"></div>
+</aside>
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>

@@ -1,27 +1,39 @@
 # Plugin portfolio
 
 A static portfolio of the plugins I've written (the 29-module Trident suite plus client commissions), aimed at Minecraft server
-owners. Plain HTML, CSS and JavaScript — no build step, no dependencies, no Node.
-Open `index.html` in a browser and it works.
+owners. Plain HTML, CSS and JavaScript — no build step, no dependencies, no Node, and no
+third-party requests (the fonts are self-hosted). Open `index.html` in a browser and it works.
 
 ```
 Portfolio/
-├── index.html              the page structure
+├── index.html              the page structure: sidebar + selected work + everything else
+├── tokyocore.html          the TokyoCore case study, linked from its server entry
 ├── review.html             the client review form — sent by link, not linked to
 ├── .nojekyll               stops GitHub Pages running Jekyll over it
 └── assets/
-    ├── css/style.css       the whole stylesheet; design tokens at the top
+    ├── css/style.css       the main stylesheet; design tokens at the top
     ├── css/review.css      the review page only; reads the same tokens
+    ├── css/case.css        case-study pages only; reads the same tokens
+    ├── fonts/              Bricolage Grotesque + Figtree, latin, SIL OFL 1.1
     ├── js/data.js          ← EDIT THIS. Every word on the site.
-    ├── js/main.js          behaviour: filters, modal. You should not need to touch it.
+    ├── js/main.js          behaviour: rendering, the detail drawer. You should not need to touch it.
     ├── js/review.js        behaviour: the review form. Same — configure it in data.js.
     └── img/favicon.svg
 ```
 
 ## The only file you need to edit
 
-**`assets/js/data.js`.** The intro, the stat tiles, the contact details, and every
-plugin entry live there as plain objects. Change a value, save, refresh.
+**`assets/js/data.js`.** The sidebar text, the contact details, the closing panel, the
+"How I work" points and every plugin entry live there as plain objects. Change a value,
+save, refresh.
+
+- `SITE.bio` can contain `{plugins}` and `{classes}`; both are counted from `PLUGINS`
+  (classes from each entry's `scale` line), so they never go stale.
+- `FEATURED` lists the plugin ids shown large under "Selected work", in order; the first
+  gets the widest tile. Every other plugin is listed under "Everything else", grouped by
+  its category.
+- A plugin's optional `status` (e.g. `"Not yet tested in game"`) shows as a flag on its
+  featured tile.
 
 ### Contact details
 
@@ -78,7 +90,7 @@ Any repo name, e.g. `plugin-portfolio`. Same commands with that name, then in th
 
 ## Servers section
 
-`SERVERS` in `data.js` drives the "Servers I worked on" cards. Logos live in
+`SERVERS` in `data.js` drives the "Servers" section. Logos live in
 `assets/img/servers/`. Dice SMP's is its own 64×64 server icon (from the server's
 `plugins/MiniMOTD/icons/`); `pixelLogo: true` draws it at a crisp 128px instead of blurring it.
 
@@ -145,12 +157,12 @@ Append an object to `PLUGINS` in `data.js`:
 
 ```js
 {
-  id: "example",              // unique, used by the modal
+  id: "example",              // unique; also what FEATURED refers to
   name: "TridentExample",
   sub: "one-line descriptor",
-  icon: "🧪",                 // any emoji
+  icon: "🧪",                 // optional; not shown by the current design
   category: "gameplay",       // client | cosmetics | social | gameplay | economy | hub | staff | infra
-  scale: "12 classes",        // the credibility line under the card
+  scale: "12 classes",        // the credibility line; "N classes" here is counted into the bio
   pitch: "What the server owner gets, in one sentence.",
   detail: ["A bullet.", "Another."],
   note: "Optional. Rendered as the highlighted callout.",
