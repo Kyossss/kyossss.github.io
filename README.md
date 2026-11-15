@@ -169,3 +169,8 @@ Append an object to `PLUGINS` in `data.js`:
 ```
 
 Categories come from the `CATEGORIES` array at the bottom of the same file.
+
+**After changing any CSS or JS file**, raise the `?v=` number on its links in
+`index.html`, `tokyocore.html` and `review.html` (e.g. `?v=2` → `?v=3`). Browsers cache
+these files for up to ten minutes, and the new number makes them fetch the new copy
+instead of mixing new HTML with old styles.
